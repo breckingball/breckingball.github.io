@@ -55,6 +55,7 @@ function mouseClicked() {
 }
 function initGame() {
   score = 0;
+  MMM = "AM"
   elapsed_frames = 0;
   current_hour = 9;
   current_minute = 0;
