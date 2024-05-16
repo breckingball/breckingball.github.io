@@ -70,7 +70,7 @@ function drawMenu() {
   textSize(30);
   strokeWeight(1);
   text(
-    "Click and Drag parts from the shelf in the upper right of the screen\ninto the red boxes on the product and release to assemble it...\n\nThe more products you assemble, the more you will get payed!!\n\n         Low Tier Employee Pay (<= 15 products): $2.50 / day\n         High Tier Employee Pay (> 15 products): $6.25 / day",
+    "Click and Drag parts from the shelf in the upper right of the screen\ninto the red boxes on the product and release to assemble it...\n\nThe more products you assemble, the more you will get paid!!\n\n         Low Tier Employee Pay (<= 15 products): $2.50 / day\n         High Tier Employee Pay (> 15 products): $6.25 / day",
     80,
     250
   );
