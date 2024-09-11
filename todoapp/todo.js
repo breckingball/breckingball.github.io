@@ -1,10 +1,12 @@
 // ToDoItem class containing the information about a todo
 class ToDoItem {
-    constructor(course, assignment, month, day) {
+    constructor(course, assignment, month, day, year, date) {
         this.course = course;
         this.assignment = assignment;
         this.month = month;
         this.day = day;
+        this.year = year;
+        this.date = date;
     }
 }
 // ToDoList class containing assignments sorted by due date
@@ -55,7 +57,7 @@ function updateToDoList() {
     // For each todo, add it to the list along with a button
     todos.to_do_items.forEach((item, index) => {
         const list_item = document.createElement("li");
-        list_item.innerHTML = `${item.course} - ${item.assignment} - ${item.month}/${item.day} <button onclick="removeTodo(${index})">Done</button>`;
+        list_item.innerHTML = `${item.course} - ${item.assignment} - ${item.month}/${item.day} <button onclick="editTodo(${index})">Edit</button> <button onclick="removeTodo(${index})">Done</button>`;
         todoList.appendChild(list_item);
     });
 }
@@ -66,10 +68,11 @@ function addTodo() {
     // Retrieving input fields
     const course = document.getElementById("course").value;
     const assignment = document.getElementById("assignment").value;
-    const date = document.getElementById("date").value.split("-");
-    const year = parseInt(date[0]);
-    const month = parseInt(date[1]);
-    const day = parseInt(date[2]);
+    const date = document.getElementById("date").value;
+    const date_split = date.split("-");
+    const year = parseInt(date_split[0]);
+    const month = parseInt(date_split[1]);
+    const day = parseInt(date_split[2]);
 
     // Invalid entry checking
     if (course == "default" || assignment == "" ||
@@ -78,7 +81,7 @@ function addTodo() {
     ) return;
 
     // Inserting new todo item into the list and printing
-    todos.insert(new ToDoItem(course, assignment, month, day));
+    todos.insert(new ToDoItem(course, assignment, month, day, year, date));
     updateToDoList();
 
     // Clearing input fields
@@ -93,6 +96,19 @@ function removeTodo(index) {
     updateToDoList();
 }
 
+// Edits a todo from the list
+function editTodo(index) {
+    
+    // Remove the todo from the list, update list
+    const to_edit = todos.to_do_items[index];
+    removeTodo(index);
+
+    // Fill in the input fields with data from todo
+    document.getElementById("course").value = to_edit.course;
+    document.getElementById("assignment").value = to_edit.assignment;
+    document.getElementById("date").value = to_edit.date;
+
+}
 // initial output of list
 updateToDoList();
 
