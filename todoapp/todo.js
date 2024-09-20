@@ -9,12 +9,19 @@ class ToDoItem {
         this.date = date;
     }
 }
+class Course {
+    constructor(number, name){
+        this.number = number;
+        this.name = name;
+    }
+}
 // ToDoList class containing assignments sorted by due date
 class ToDoList {
 
     // Creates the todolist by reading localstorage
     constructor() {
         this.to_do_items = JSON.parse(localStorage.getItem("todoitems")) || [];
+        this.class_list = JSON.parse(localStorage.getItem("classlist")) || [];
     }
 
     // Inserts a new todo in sorted order by due date
@@ -30,27 +37,32 @@ class ToDoList {
     }
 
     // Removes a todo from index position
-    remove(index) {
+    removeTodo(index) {
         this.to_do_items.splice(index, 1);
     }
 
+    removeClass(index) {
+        this.class_list.splice(index, 1);
+    }
 
 }
 
 // Runs before window is terminated, stores the list in localstorage for next time
 window.addEventListener("beforeunload", () => {
     localStorage.setItem("todoitems", JSON.stringify(todos.to_do_items));
+    localStorage.setItem("classlist", JSON.stringify(todos.class_list));
 });
 
 
 
 
 const todos = new ToDoList();
-const todoList = document.getElementById("todoList");
+
 
 // Prints the todolist to the screen
 function updateToDoList() {
-
+    const todoList = document.getElementById("todoList");
+   
     // Clear the list
     todoList.innerHTML = "";
 
@@ -92,7 +104,7 @@ function addTodo() {
 
 // Removes a todo from the list and prints new list
 function removeTodo(index) {
-    todos.remove(index);
+    todos.removeTodo(index);
     updateToDoList();
 }
 
@@ -109,6 +121,90 @@ function editTodo(index) {
     document.getElementById("date").value = to_edit.date;
 
 }
-// initial output of list
-updateToDoList();
+
+function addClass(){
+    const class_number = document.getElementById("classNumber").value;
+    const class_title = document.getElementById("className").value;
+
+    if (class_number == "" || class_title == "") return;
+    // Add new class name to class_list
+    todos.class_list.push(new Course(class_number, class_title));
+    // Sort new list into alphabetical order
+    todos.class_list.sort((a,b) => a.number.localeCompare(b.number));
+
+    updateClassList();
+
+   
+
+    document.getElementById("classNumber").value = "";
+    document.getElementById("className").value = "";
+}
+
+function removeClass(index) {
+    todos.removeClass(index);
+    updateClassList();
+}
+
+function updateClassList() {
+    const classList = document.getElementById("classList");
+    // Clear the list
+    classList.innerHTML = "";
+
+    // For each todo, add it to the list along with a button
+    todos.class_list.forEach((item, index) => {
+        const list_item = document.createElement("li");
+        list_item.innerHTML = `${item.number} - ${item.name} <button onclick="removeClass(${index})">Remove</button>`;
+        classList.appendChild(list_item);
+    });
+}
+// Edits the existing classes
+function loadEditClasses(){
+    document.getElementById("screen").innerHTML = 
+    `<div id="inputs">
+	    <h2>Edit Classes</h2>
+		<label for="classNumber">Course Number:</label>
+        <input type="text" id="classNumber"><br>
+        <label for="className">Course Name:</label>
+        <input type="text" id="className"><br>
+		<button onclick="addClass()">Add To Class List</button>
+        <button onclick="loadMainPage()">To Do List</button>
+	</div>
+	<div id="list">
+		<ul id="classList"></ul>
+	</div>`;
+    updateClassList();
+}
+
+function loadMainPage(){
+    document.getElementById("screen").innerHTML = 
+    `<div id="inputs">
+	    <h2>To Do List</h2>
+		<label for="course">Course:</label>
+		<select name="course" id="course">
+			<option value="default" selected disabled hidden>Select Course</option>
+		</select>
+		<label for="assignment">Assignment Name:</label>
+		<input type="text" id="assignment"><br>
+		<label for="date">Due Date:</label>
+		<input type="date" id="date"><br>
+		<button onclick="addTodo()">Add To List</button>
+		<button onclick="loadEditClasses()">Edit Classes</button>
+	</div>
+	<div id="list">
+		<ul id="todoList"></ul>
+	</div>`;
+    // load classes
+    const classes = document.getElementById("course");
+    todos.class_list.forEach((item) =>{
+        const class_item = document.createElement("option");
+        class_item.value = `${item.number}`;
+        class_item.innerHTML = `${item.number} - ${item.name}`;
+        classes.appendChild(class_item);
+    });
+    updateToDoList();
+
+   
+}
+
+loadMainPage();
 

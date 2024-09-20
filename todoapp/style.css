@@ -31,7 +31,6 @@ body {
     left: 10px;
     overflow-y: auto;
     background-color: #ccc;
-    
 }
 
 
@@ -59,7 +58,7 @@ label {
     margin-top: 12px;
 }
 
-#todoList {
+#todoList, #classList {
     list-style: none;
     padding: 0;
     width: 600px;
@@ -73,6 +72,18 @@ label {
     text-align: left;
 }
 
+#classList li {
+    border: 1px solid #aaa;
+    padding: 5px;
+    margin-bottom: 5px;
+    background-color: #eee;
+    text-align: left;
+}
+
 #todoList button {
+    float: right;
+}
+
+#classList button {
     float: right;
 }
