@@ -9,6 +9,7 @@ class ToDoItem {
         this.date = date;
     }
 }
+// Courses class containing the information about a class
 class Course {
     constructor(number, name){
         this.number = number;
@@ -16,6 +17,7 @@ class Course {
     }
 }
 // ToDoList class containing assignments sorted by due date
+// and classes sorted by alphabetical order of class number
 class ToDoList {
 
     // Creates the todolist by reading localstorage
@@ -41,25 +43,18 @@ class ToDoList {
         this.to_do_items.splice(index, 1);
     }
 
+    // Removes a class from index position
     removeClass(index) {
         this.class_list.splice(index, 1);
     }
 
 }
-
-// Runs before window is terminated, stores the list in localstorage for next time
+// Runs before window is terminated, stores the lists in localstorage for next time
 window.addEventListener("beforeunload", () => {
     localStorage.setItem("todoitems", JSON.stringify(todos.to_do_items));
     localStorage.setItem("classlist", JSON.stringify(todos.class_list));
 });
-
-
-
-
-const todos = new ToDoList();
-
-
-// Prints the todolist to the screen
+//  Updates the visually displayed list in To Do List page 
 function updateToDoList() {
     const todoList = document.getElementById("todoList");
    
@@ -73,8 +68,7 @@ function updateToDoList() {
         todoList.appendChild(list_item);
     });
 }
-
-// Adds a new todo to the list
+// Adds a new todo to the list and outputs new list
 function addTodo() {
 
     // Retrieving input fields
@@ -101,13 +95,11 @@ function addTodo() {
     document.getElementById("assignment").value = "";
     document.getElementById("date").value = "";
 }
-
-// Removes a todo from the list and prints new list
+// Removes a todo from the list and outputs new list
 function removeTodo(index) {
     todos.removeTodo(index);
     updateToDoList();
 }
-
 // Edits a todo from the list
 function editTodo(index) {
     
@@ -121,30 +113,34 @@ function editTodo(index) {
     document.getElementById("date").value = to_edit.date;
 
 }
-
+// Adds a course to the class_list and outputs new list
 function addClass(){
+    // Getting input values from the fields
     const class_number = document.getElementById("classNumber").value;
     const class_title = document.getElementById("className").value;
 
+    // Error checking if no number or title was entered
     if (class_number == "" || class_title == "") return;
+
     // Add new class name to class_list
     todos.class_list.push(new Course(class_number, class_title));
+    
     // Sort new list into alphabetical order
     todos.class_list.sort((a,b) => a.number.localeCompare(b.number));
 
+    // Update the list displayed
     updateClassList();
 
-   
-
+    // Reset the input fields to blank entries
     document.getElementById("classNumber").value = "";
     document.getElementById("className").value = "";
 }
-
+// Removes a course from the class_list and outputs new list
 function removeClass(index) {
     todos.removeClass(index);
     updateClassList();
 }
-
+// Updates the visually displayed list in Edit Classes page 
 function updateClassList() {
     const classList = document.getElementById("classList");
     // Clear the list
@@ -157,7 +153,7 @@ function updateClassList() {
         classList.appendChild(list_item);
     });
 }
-// Edits the existing classes
+// Loads entire Edit Classes page
 function loadEditClasses(){
     document.getElementById("screen").innerHTML = 
     `<div id="inputs">
@@ -170,11 +166,11 @@ function loadEditClasses(){
         <button onclick="loadMainPage()">To Do List</button>
 	</div>
 	<div id="list">
-		<ul id="classList"></ul>
+		<ul class="lists" id="classList"></ul>
 	</div>`;
     updateClassList();
 }
-
+// Loads entire Main Page
 function loadMainPage(){
     document.getElementById("screen").innerHTML = 
     `<div id="inputs">
@@ -191,7 +187,7 @@ function loadMainPage(){
 		<button onclick="loadEditClasses()">Edit Classes</button>
 	</div>
 	<div id="list">
-		<ul id="todoList"></ul>
+		<ul class="lists" id="todoList"></ul>
 	</div>`;
     // load classes
     const classes = document.getElementById("course");
@@ -206,5 +202,7 @@ function loadMainPage(){
    
 }
 
+// Executes when page is loaded
+const todos = new ToDoList();
 loadMainPage();
 

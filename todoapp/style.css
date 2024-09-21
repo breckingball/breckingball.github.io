@@ -14,6 +14,7 @@ body {
     margin-top: 6px;
     padding: 5px 15px 5px 15px;
     font-size: 20px;
+    border-radius: 10px;
 }
 
 #list {
@@ -58,32 +59,24 @@ label {
     margin-top: 12px;
 }
 
-#todoList, #classList {
+.lists {
     list-style: none;
     padding: 0;
     width: 600px;
 }
 
-#todoList li {
+.lists li {
     border: 1px solid #aaa;
     padding: 5px;
     margin-bottom: 5px;
     background-color: #eee;
     text-align: left;
+    text-indent: 5px;
+    border-radius: 10px;
 }
 
-#classList li {
-    border: 1px solid #aaa;
-    padding: 5px;
-    margin-bottom: 5px;
-    background-color: #eee;
-    text-align: left;
-}
-
-#todoList button {
-    float: right;
-}
-
-#classList button {
+.lists button {
+    margin-left: 3px;
+    margin-right: 1px;
     float: right;
 }
