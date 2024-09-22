@@ -9,6 +9,7 @@ class ToDoItem {
         this.date = date;
     }
 }
+
 // Courses class containing the information about a class
 class Course {
     constructor(number, name){
@@ -16,6 +17,7 @@ class Course {
         this.name = name;
     }
 }
+
 // ToDoList class containing assignments sorted by due date
 // and classes sorted by alphabetical order of class number
 class ToDoList {
@@ -49,11 +51,13 @@ class ToDoList {
     }
 
 }
+
 // Runs before window is terminated, stores the lists in localstorage for next time
 window.addEventListener("beforeunload", () => {
     localStorage.setItem("todoitems", JSON.stringify(todos.to_do_items));
     localStorage.setItem("classlist", JSON.stringify(todos.class_list));
 });
+
 //  Updates the visually displayed list in To Do List page 
 function updateToDoList() {
     const todoList = document.getElementById("todoList");
@@ -68,6 +72,7 @@ function updateToDoList() {
         todoList.appendChild(list_item);
     });
 }
+
 // Adds a new todo to the list and outputs new list
 function addTodo() {
 
@@ -95,11 +100,13 @@ function addTodo() {
     document.getElementById("assignment").value = "";
     document.getElementById("date").value = "";
 }
+
 // Removes a todo from the list and outputs new list
 function removeTodo(index) {
     todos.removeTodo(index);
     updateToDoList();
 }
+
 // Edits a todo from the list
 function editTodo(index) {
     
@@ -113,8 +120,9 @@ function editTodo(index) {
     document.getElementById("date").value = to_edit.date;
 
 }
+
 // Adds a course to the class_list and outputs new list
-function addClass(){
+function addClass() {
     // Getting input values from the fields
     const class_number = document.getElementById("classNumber").value;
     const class_title = document.getElementById("className").value;
@@ -135,11 +143,13 @@ function addClass(){
     document.getElementById("classNumber").value = "";
     document.getElementById("className").value = "";
 }
+
 // Removes a course from the class_list and outputs new list
 function removeClass(index) {
     todos.removeClass(index);
     updateClassList();
 }
+
 // Updates the visually displayed list in Edit Classes page 
 function updateClassList() {
     const classList = document.getElementById("classList");
@@ -153,8 +163,15 @@ function updateClassList() {
         classList.appendChild(list_item);
     });
 }
+
+// Updates name of user
+function updatePersonName() {
+    const person_name = document.getElementById("person").value;
+    localStorage.setItem("person", person_name);
+    loadMainPage();
+}
 // Loads entire Edit Classes page
-function loadEditClasses(){
+function loadEditClasses() {
     document.getElementById("screen").innerHTML = 
     `<div id="inputs">
 	    <h2>Edit Classes</h2>
@@ -170,11 +187,17 @@ function loadEditClasses(){
 	</div>`;
     updateClassList();
 }
+
 // Loads entire Main Page
-function loadMainPage(){
+function loadMainPage() {
+    const person_name = localStorage.getItem("person");
+
+    document.getElementById("colorpicker").innerHTML =
+    `<input type="color" id="colorpick"></input>`;
+
     document.getElementById("screen").innerHTML = 
     `<div id="inputs">
-	    <h2>To Do List</h2>
+	    <h2>${person_name}'s To Do List</h2>
 		<label for="course">Course:</label>
 		<select name="course" id="course">
 			<option value="default" selected disabled hidden>Select Course</option>
@@ -197,12 +220,40 @@ function loadMainPage(){
         class_item.innerHTML = `${item.number} - ${item.name}`;
         classes.appendChild(class_item);
     });
+
+    // Add Color choosing options
+    document.getElementById("colorpick").addEventListener("change", () => {
+        const color_choice = document.getElementById("colorpick").value;
+        document.body.style.backgroundColor = color_choice;
+        document.getElementById("list").style.backgroundColor = color_choice;
+        localStorage.setItem("color",color_choice);
+    });
     updateToDoList();
 
    
 }
 
+// Loads page that new users see
+function loadLandingPage() {
+    document.getElementById("screen").innerHTML = 
+    `<div id="inputs">
+		<h2>Welcome</h2>
+        <label for="person">Enter First Name:</label>
+		<input type="text" id="person"><br>
+        <button onclick="updatePersonName()">Done</button>
+	</div>`;
+}
+
+// Sets the background color to color that user chooses
+function setBackgrounds(){
+    const color_choice = localStorage.getItem("color") || "#ccc";
+    document.body.style.backgroundColor = color_choice;
+    document.getElementById("list").style.backgroundColor = color_choice;
+}
+
 // Executes when page is loaded
 const todos = new ToDoList();
-loadMainPage();
+
+const person_name = localStorage.getItem("person") || "";
+person_name == "" ? loadLandingPage() : (loadMainPage(),setBackgrounds());
 
